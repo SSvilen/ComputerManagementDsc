@@ -631,6 +631,59 @@ try
                 }
             }
 
+            Context 'A scheduled task exists and is configured with the wrong execution account but requires Network Service account' {
+                $testParameters = @{
+                    TaskName            = 'Test task'
+                    TaskPath            = '\Test\'
+                    ActionExecutable    = 'C:\windows\system32\WindowsPowerShell\v1.0\powershell.exe'
+                    ScheduleType        = 'Once'
+                    RepeatInterval      = (New-TimeSpan -Minutes 15).ToString()
+                    RepetitionDuration  = (New-TimeSpan -Hours 8).ToString()
+                    ExecuteAsCredential = New-Object System.Management.Automation.PSCredential ('NT AUTHORITY\NETWORK SERVICE', (New-Object -TypeName System.Security.SecureString))
+                    Verbose             = $True
+                }
+
+                Mock -CommandName Get-ScheduledTask -MockWith {
+                    @{
+                        TaskName  = $testParameters.TaskName
+                        TaskPath  = $testParameters.TaskPath
+                        Actions   = @(
+                            [pscustomobject] @{
+                                Execute = $testParameters.ActionExecutable
+                            }
+                        )
+                        Triggers  = @(
+                            [pscustomobject] @{
+                                Repetition = @{
+                                    Duration = "PT$([System.TimeSpan]::Parse($testParameters.RepetitionDuration).TotalHours)H"
+                                    Interval = "PT$([System.TimeSpan]::Parse($testParameters.RepeatInterval).TotalMinutes)M"
+                                }
+                                CimClass   = @{
+                                    CimClassName = 'MSFT_TaskTimeTrigger'
+                                }
+                            }
+                        )
+                        Principal = [pscustomobject] @{
+                            UserId = 'WrongUser'
+                        }
+                    }
+                }
+
+                It 'Should return the correct values from Get-TargetResource' {
+                    $result = Get-TargetResource @testParameters
+                    $result.Ensure | Should -Be 'Present'
+                }
+
+                It 'Should return false from the test method' {
+                    Test-TargetResource @testParameters | Should -Be $false
+                }
+
+                It 'Should update the scheduled task in the set method' {
+                    Set-TargetResource @testParameters
+                    Assert-MockCalled -CommandName Set-ScheduledTask -Exactly -Times 1
+                }
+            }
+
             Context 'A scheduled task exists and is configured with the wrong logon type' {
                 $testParameters = @{
                     TaskName            = 'Test task'

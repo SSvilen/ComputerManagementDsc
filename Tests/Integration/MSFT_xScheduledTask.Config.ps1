@@ -155,7 +155,29 @@ Configuration xScheduledTaskExecuteAsAdd
             -TypeName System.Management.Automation.PSCredential `
             -ArgumentList ($ENV:USERNAME, (ConvertTo-SecureString -String 'Ignore' -AsPlainText -Force))
 
-        xScheduledTask xScheduledTaskOnceAdd
+        xScheduledTask xScheduledTaskExecuteAsAdd
+        {
+            TaskName            = 'Test task Logon'
+            TaskPath            = '\xComputerManagement\'
+            ActionExecutable    = 'C:\windows\system32\WindowsPowerShell\v1.0\powershell.exe'
+            ScheduleType        = 'AtLogOn'
+            ExecuteAsCredential = $executeAsCredential
+            LogonType           = 'Interactive'
+            RunLevel            = 'Highest'
+        }
+    }
+}
+
+Configuration xScheduledTaskExecuteAsNetworkServiceAdd
+{
+    Import-DscResource -ModuleName xComputerManagement
+    node 'localhost'
+    {
+        $executeAsCredential = New-Object `
+            -TypeName System.Management.Automation.PSCredential `
+            -ArgumentList (New-Object System.Management.Automation.PSCredential ('NT AUTHORITY\NETWORK SERVICE', (New-Object -TypeName System.Security.SecureString)))
+
+        xScheduledTask xScheduledTaskExecuteAsNetworkServiceAdd
         {
             TaskName            = 'Test task Logon'
             TaskPath            = '\xComputerManagement\'
@@ -283,7 +305,23 @@ Configuration xScheduledTaskExecuteAsMod
     Import-DscResource -ModuleName xComputerManagement
     node 'localhost'
     {
-        xScheduledTask xScheduledTaskOnceMod
+        xScheduledTask xScheduledTaskExecuteAsMod
+        {
+            TaskName         = 'Test task Logon'
+            TaskPath         = '\xComputerManagement\'
+            ActionExecutable = 'C:\windows\system32\WindowsPowerShell\v1.0\powershell.exe'
+            ScheduleType     = 'AtLogOn'
+            RunLevel         = 'Limited'
+        }
+    }
+}
+
+Configuration xScheduledTaskExecuteAsNetworkServiceMod
+{
+    Import-DscResource -ModuleName xComputerManagement
+    node 'localhost'
+    {
+        xScheduledTask xScheduledTaskExecuteAsNetworkServiceMod
         {
             TaskName         = 'Test task Logon'
             TaskPath         = '\xComputerManagement\'
@@ -414,7 +452,23 @@ Configuration xScheduledTaskExecuteAsDel
     Import-DscResource -ModuleName xComputerManagement
     node 'localhost'
     {
-        xScheduledTask xScheduledTaskOnceDel
+        xScheduledTask xScheduledTaskExecuteAsDel
+        {
+            TaskName         = 'Test task Logon'
+            TaskPath         = '\xComputerManagement\'
+            ActionExecutable = 'C:\windows\system32\WindowsPowerShell\v1.0\powershell.exe'
+            ScheduleType     = 'AtLogOn'
+            Ensure           = 'Absent'
+        }
+    }
+}
+
+Configuration xScheduledTaskExecuteAsNetworkServiceDel
+{
+    Import-DscResource -ModuleName xComputerManagement
+    node 'localhost'
+    {
+        xScheduledTask xScheduledTaskExecuteAsNetworkServiceDel
         {
             TaskName         = 'Test task Logon'
             TaskPath         = '\xComputerManagement\'

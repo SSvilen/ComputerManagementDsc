@@ -864,9 +864,9 @@ function Set-TargetResource
             and the action executable isn't specified then disable the task
         #>
         if ($currentValues.Ensure -eq 'Present' `
-            -and $currentValues.Enable `
-            -and -not $Enable `
-            -and -not $PSBoundParameters.ContainsKey('ActionExecutable'))
+                -and $currentValues.Enable `
+                -and -not $Enable `
+                -and -not $PSBoundParameters.ContainsKey('ActionExecutable'))
         {
             Write-Verbose -Message ($script:localizedData.DisablingExistingScheduledTask -f $TaskName, $TaskPath)
             Disable-ScheduledTask -TaskName $TaskName -TaskPath $TaskPath
@@ -1142,8 +1142,11 @@ function Set-TargetResource
 
             if ($LogonType -notin ('Interactive', 'S4U'))
             {
-                # Only set the password if the LogonType is not interactive or S4U
-                $registerArguments.Add('Password', $ExecuteAsCredential.GetNetworkCredential().Password)
+                # Only set the password if not empty and the LogonType is not interactive or S4U
+                if (-not [System.String]::IsNullOrEmpty($ExecuteAsCredential.GetNetworkCredential().Password))
+                {
+                    $registerArguments.Add('Password', $ExecuteAsCredential.GetNetworkCredential().Password)
+                }
             }
         }
         else
@@ -1223,8 +1226,8 @@ function Set-TargetResource
 
             # Register the scheduled task
 
-            $registerArguments.Add('TaskName',$TaskName)
-            $registerArguments.Add('TaskPath',$TaskPath)
+            $registerArguments.Add('TaskName', $TaskName)
+            $registerArguments.Add('TaskPath', $TaskPath)
             $registerArguments.Add('InputObject', $scheduledTask)
 
             $null = Register-ScheduledTask @registerArguments

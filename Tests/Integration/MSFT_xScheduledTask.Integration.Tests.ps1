@@ -29,13 +29,14 @@ try
     Describe $Global:DSCResourceName {
 
         $contexts = @{
-            Once              = 'xScheduledTaskOnce'
-            Daily             = 'xScheduledTaskDaily'
-            DailyIndefinitely = 'xScheduledTaskDailyIndefinitely'
-            Weekly            = 'xScheduledTaskWeekly'
-            AtLogon           = 'xScheduledTaskLogon'
-            AtStartup         = 'xScheduledTaskStartup'
-            ExecuteAs         = 'xScheduledTaskExecuteAs'
+            Once                    = 'xScheduledTaskOnce'
+            Daily                   = 'xScheduledTaskDaily'
+            DailyIndefinitely       = 'xScheduledTaskDailyIndefinitely'
+            Weekly                  = 'xScheduledTaskWeekly'
+            AtLogon                 = 'xScheduledTaskLogon'
+            AtStartup               = 'xScheduledTaskStartup'
+            ExecuteAs               = 'xScheduledTaskExecuteAs'
+            ExecuteAsNetworkService = 'xScheduledTaskExecuteAsNetworkService'
         }
 
         $configData = @{
