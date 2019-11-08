@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Added `.gitattributes` to ensure CRLF is used when pulling repository.
+- SystemLocale:
+  - Migrated SystemLocale from [SystemLocaleDsc](https://github.com/PowerShell/SystemLocaleDsc).
+
 ## 7.1.0.0
 
 - ComputerManagementDsc:
@@ -17,8 +21,6 @@
 - SmbShare:
   - Removal of duplicate code in Add-SmbShareAccessPermission helper function
     fixes [Issue #226](https://github.com/PowerShell/ComputerManagementDsc/issues/226).
-- SystemLocale:
-  - Migrated SystemLocale from [SystemLocaleDsc](https://github.com/PowerShell/SystemLocaleDsc).
 - RemoveDesktopAdmin:
   - Correct Context messages in integration tests by adding 'When'.
 
