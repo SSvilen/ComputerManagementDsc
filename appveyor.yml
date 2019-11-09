@@ -1,17 +1,22 @@
+---
 #---------------------------------#
 #      environment configuration  #
 #---------------------------------#
 version: 1.9.{build}.0
 environment:
-  gallery_api:
-    secure: 9ekJzfsPCDBkyLrfmov83XbbhZ6E2N3z+B/Io8NbDetbHc6hWS19zsDmy7t0Vvxv
+    gallery_api:
+        secure: 9ekJzfsPCDBkyLrfmov83XbbhZ6E2N3z+B/Io8NbDetbHc6hWS19zsDmy7t0Vvxv
+init:
+    - ps: |
+          iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+
 install:
     - git clone https://github.com/PowerShell/DscResource.Tests
 
     - ps: |
-        $moduleName = 'ComputerManagementDsc'
-        Import-Module "$env:APPVEYOR_BUILD_FOLDER\DscResource.Tests\AppVeyor.psm1"
-        Invoke-AppveyorInstallTask
+          $moduleName = 'ComputerManagementDsc'
+          Import-Module "$env:APPVEYOR_BUILD_FOLDER\DscResource.Tests\AppVeyor.psm1"
+          Invoke-AppveyorInstallTask
 
 #---------------------------------#
 #      build configuration        #
@@ -37,8 +42,8 @@ test_script:
 # scripts to run before deployment
 deploy_script:
     - ps: |
-        Invoke-AppveyorAfterTestTask `
-            -Type 'Wiki' `
-            -ResourceModuleName $moduleName
+          Invoke-AppveyorAfterTestTask `
+              -Type 'Wiki' `
+              -ResourceModuleName $moduleName
 
-        Invoke-AppVeyorDeployTask
+          Invoke-AppVeyorDeployTask
