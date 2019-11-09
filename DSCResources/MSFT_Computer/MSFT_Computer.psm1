@@ -198,7 +198,7 @@ function Set-TargetResource
         $Name = $env:COMPUTERNAME
     }
 
-    if ($PSBoundParameters.ContainsKey('Description'))
+    if($PSBoundParameters.ContainsKey('Description'))
     {
         Write-Verbose -Message ($script:localizedData.SettingComputerDescriptionMessage -f $Description)
         $win32OperatingSystemCimInstance = Get-CimInstance -ClassName Win32_OperatingSystem
