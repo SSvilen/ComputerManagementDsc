@@ -11,7 +11,7 @@ init:
           iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 install:
-    - git clone --single-branch HashtableCheck https://github.com/SSvilen/DscResource.Tests
+    - git clone -q --branch=HashtableCheck https://github.com/SSvilen/DscResource.Tests
 
     - ps: |
           $moduleName = 'ComputerManagementDsc'
